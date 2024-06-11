@@ -88,13 +88,13 @@ public class EventsWebSocketHandler implements WebSocketHandler {
                             throw new RuntimeException(e);
                         }
                     })
-                    .filter(movementMessage -> {
-                        if (movementMessage.type.equals("initialize")) {
+                    .filter(clientMessage -> {
+                        if (clientMessage.type.equals("initialize")) {
                             System.out.println("initialize");
 
                             InitialData initialData = null;
                             try {
-                                initialData = objectMapper.treeToValue(movementMessage.getData(), InitialData.class);
+                                initialData = objectMapper.treeToValue(clientMessage.getData(), InitialData.class);
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
@@ -107,9 +107,9 @@ public class EventsWebSocketHandler implements WebSocketHandler {
 
                         return true;
                     })
-                    .filter((movementMessage) -> gameData.joinSession != null && gameData.joinSession.isOpen())
-                    .filter((movementMessage) -> {
-                        if (movementMessage.type.equals(("lostPoint"))) {
+                    .filter((clientMessage) -> gameData.joinSession != null && gameData.joinSession.isOpen())
+                    .filter((clientMessage) -> {
+                        if (clientMessage.type.equals(("lostPoint"))) {
                             System.out.println("LOST POINT/n/n/n/n/n/n/n/n");
                             gameData.joinScore++;
                             Mono.delay(Duration.ofSeconds(3)).doOnNext((val) -> {
@@ -121,14 +121,14 @@ public class EventsWebSocketHandler implements WebSocketHandler {
                         }
                         return true;
                     })
-                    .map(movementMessage -> {
+                    .map(clientMessage -> {
                         try {
-                            if (movementMessage.type.equals("slime")) {
-                                SlimeData slimeData = objectMapper.treeToValue(movementMessage.getData(), SlimeData.class);
-                                return objectMapper.writeValueAsString(movementMessage);
-                            } else { //if(movementMessage.type.equals("ball"))
-                                BallData ballData = objectMapper.treeToValue(movementMessage.getData(), BallData.class);
-                                return objectMapper.writeValueAsString(movementMessage);
+                            if (clientMessage.type.equals("slime")) {
+                                SlimeData slimeData = objectMapper.treeToValue(clientMessage.getData(), SlimeData.class);
+                                return objectMapper.writeValueAsString(clientMessage);
+                            } else { //if(clientMessage.type.equals("ball"))
+                                BallData ballData = objectMapper.treeToValue(clientMessage.getData(), BallData.class);
+                                return objectMapper.writeValueAsString(clientMessage);
                             }
                         } catch (JsonProcessingException e) {
                             System.out.println("session E2");
@@ -194,8 +194,8 @@ public class EventsWebSocketHandler implements WebSocketHandler {
                             throw new RuntimeException(e);
                         }
                     })
-                    .filter((movementMessage) -> {
-                        if (movementMessage.type.equals(("lostPoint"))) {
+                    .filter((clientMessage) -> {
+                        if (clientMessage.type.equals(("lostPoint"))) {
                             System.out.println("LOST POINT/n/n/n/n/n/n/n/n");
                             gameData.hostScore++;
                             Mono.delay(Duration.ofSeconds(3)).doOnNext((val) -> {
@@ -207,14 +207,14 @@ public class EventsWebSocketHandler implements WebSocketHandler {
                         }
                         return true;
                     })
-                    .map(movementMessage -> {
+                    .map(clientMessage -> {
                         try {
-                            if (movementMessage.type.equals("slime")) {
-                                SlimeData slimeData = objectMapper.treeToValue(movementMessage.getData(), SlimeData.class);
-                                return objectMapper.writeValueAsString(movementMessage);
-                            } else { //if(movementMessage.type.equals("ball"))
-                                BallData ballData = objectMapper.treeToValue(movementMessage.getData(), BallData.class);
-                                return objectMapper.writeValueAsString(movementMessage);
+                            if (clientMessage.type.equals("slime")) {
+                                SlimeData slimeData = objectMapper.treeToValue(clientMessage.getData(), SlimeData.class);
+                                return objectMapper.writeValueAsString(clientMessage);
+                            } else { //if(clientMessage.type.equals("ball"))
+                                BallData ballData = objectMapper.treeToValue(clientMessage.getData(), BallData.class);
+                                return objectMapper.writeValueAsString(clientMessage);
                             }
                         } catch (JsonProcessingException e) {
                             System.out.println("session E2");
